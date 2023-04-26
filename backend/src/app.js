@@ -1,10 +1,17 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const cors = require("cors");
-const router = require("./router");
+import express from "express";
+import cors from "cors";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { existsSync } from "fs";
+import router from "./router.js";
+import log from "./services/logger.js";
 
 const app = express();
+const { loggingMiddleware } = log;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+app.use(loggingMiddleware);
 
 // use some application-level middlewares
 app.use(
@@ -17,16 +24,16 @@ app.use(
 app.use(express.json());
 
 // Serve the public folder for public resources
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(join(__dirname, "../public")));
 
 // Serve REACT APP
-app.use(express.static(path.join(__dirname, "..", "..", "frontend", "dist")));
+app.use(express.static(join(__dirname, "..", "..", "frontend", "dist")));
 
 // API routes
 app.use(router);
 
 // Redirect all requests to the REACT app
-const reactIndexFile = path.join(
+const reactIndexFile = join(
   __dirname,
   "..",
   "..",
@@ -35,11 +42,10 @@ const reactIndexFile = path.join(
   "index.html"
 );
 
-if (fs.existsSync(reactIndexFile)) {
+if (existsSync(reactIndexFile)) {
   app.get("*", (req, res) => {
     res.sendFile(reactIndexFile);
   });
 }
 
-// ready to export
-module.exports = app;
+export default app;

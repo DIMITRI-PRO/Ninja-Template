@@ -1,7 +1,10 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import fs from "fs";
+import mysql from "mysql2/promise";
 
-const fs = require("fs");
-const mysql = require("mysql2/promise");
+const { config } = dotenv;
+
+config();
 
 const migrate = async () => {
   const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -21,6 +24,8 @@ const migrate = async () => {
   const sql = fs.readFileSync("./database.sql", "utf8");
 
   await connection.query(sql);
+
+  console.warn(`end migration into ${DB_NAME}`);
 
   connection.end();
 };

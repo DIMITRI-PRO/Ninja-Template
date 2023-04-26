@@ -1,6 +1,7 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import app from "./src/app.js";
 
-const app = require("./src/app");
+dotenv.config();
 
 const port = parseInt(process.env.APP_PORT ?? "5000", 10);
 
@@ -8,7 +9,6 @@ app.listen(port, (err) => {
   if (err) {
     console.error("Something bad happened");
   } else {
-    // eslint-disable-next-line no-restricted-syntax
-    console.log(`Server is listening on ${port}`);
+    console.warn(`Server is listening on ${port}`);
   }
 });

@@ -1,13 +1,23 @@
-const express = require("express");
+import { Router, json } from "express";
+import users from "./models/Users/usersSchema.js";
+import auth from "./middleware/auth.js";
+import Controllers from "./controllers/index.js";
 
-const router = express.Router();
+const { Users } = Controllers;
 
-const itemControllers = require("./controllers/itemControllers");
+const router = Router();
 
-router.get("/items", itemControllers.browse);
-router.get("/items/:id", itemControllers.read);
-router.put("/items/:id", itemControllers.edit);
-router.post("/items", itemControllers.add);
-router.delete("/items/:id", itemControllers.destroy);
+const { hashPassword, verifyPassword, verifyToken } = auth;
+const { validateUser } = users;
+const { userControllers, login, postUser } = Users;
 
-module.exports = router;
+router.use(json());
+
+router.post("/register", validateUser, hashPassword, postUser);
+router.post("/login", login, verifyPassword);
+
+userControllers(router);
+
+router.use(verifyToken);
+
+export default router;

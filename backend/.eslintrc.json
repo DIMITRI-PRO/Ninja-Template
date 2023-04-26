@@ -10,6 +10,8 @@
   },
   "rules": {
     "no-console": "off",
+    "import/extensions": "off",
+    "no-underscore-dangle": "off",
     "no-restricted-syntax": [
       "error",
       {
