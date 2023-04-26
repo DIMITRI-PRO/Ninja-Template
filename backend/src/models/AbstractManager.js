@@ -4,13 +4,13 @@ class AbstractManager {
   }
 
   find(id) {
-    return this.connection.query(`select * from  ${this.table} where id = ?`, [
+    return this.connection.query(`select * from ${this.table} where id = ?`, [
       id,
     ]);
   }
 
   findAll() {
-    return this.connection.query(`select * from  ${this.table}`);
+    return this.connection.query(`select * from ${this.table}`);
   }
 
   delete(id) {
@@ -24,4 +24,4 @@ class AbstractManager {
   }
 }
 
-module.exports = AbstractManager;
+export default AbstractManager;

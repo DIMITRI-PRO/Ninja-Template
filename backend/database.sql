@@ -1,6 +1,18 @@
-CREATE TABLE item (
-  id int(11) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  title varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE
+    `users` (
+        `id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+        `lastname` varchar(45) NOT NULL,
+        `firstname` varchar(45) NOT NULL,
+        `email` varchar(254) NOT NULL UNIQUE KEY,
+        `password` varchar(254) NOT NULL,
+        `pseudo` varchar(15) NOT NULL,
+        `picture` varchar(254) NULL
+    );
 
-INSERT INTO item (title) VALUES ('Stuff'), ('Doodads');
+CREATE TABLE
+    `scores` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `value_score` int NOT NULL,
+        `id_user` int NOT NULL,
+        PRIMARY KEY (`id`)
+    );
