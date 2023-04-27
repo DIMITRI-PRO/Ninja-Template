@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import fs from "fs";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
