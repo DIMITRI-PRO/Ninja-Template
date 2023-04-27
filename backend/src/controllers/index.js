@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import fs from "fs";
 import path, { dirname } from "path";
 import url, { fileURLToPath } from "url";
