@@ -1,15 +1,8 @@
-import Home from "./pages/Home";
-
-import "./App.css";
-
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <Home />
-      <p>coucou</p>
-      <p>comment vas tu?</p>
+    <div className="container">
+      <h1>Hello world!</h1>
+      <button type="button">test</button>
     </div>
   );
-}
-
-export default App;
+};
