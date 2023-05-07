@@ -21,21 +21,14 @@ const logger = winston.createLogger({
 });
 
 const getColorizedStatus = (status) => {
-  switch (status) {
-    case 200:
-      return `\x1b[32m${status}\x1b[0m`; // green
-    case 400:
-      return `\x1b[31m${status}\x1b[0m`; // red
-    case 401:
-      return `\x1b[31m${status}\x1b[0m`; // red
-    case 403:
-      return `\x1b[31m${status}\x1b[0m`; // red
-    case 404:
-      return `\x1b[31m${status}\x1b[0m`; // red
-    case 422:
+  const statusBegin = status.toString().charAt(0);
+  switch (true) {
+    case statusBegin === "2":
       return `\x1b[33m${status}\x1b[0m`; // yellow
-    case 500:
+    case statusBegin === "4":
       return `\x1b[31m${status}\x1b[0m`; // red
+    case statusBegin === "5":
+      return `\x1b[33m${status}\x1b[0m`; // orange
     default:
       return status;
   }

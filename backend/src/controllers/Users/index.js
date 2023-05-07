@@ -11,10 +11,10 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getUser = async ({ params }, res) => {
-  const { id } = params;
+const getUser = async ({ payload }, res) => {
   try {
-    const [rows] = await Users.find(id);
+    const { sub } = payload;
+    const [rows] = await Users.findUser(sub);
     if (rows[0] == null) res.sendStatus(404);
     else res.send(rows[0]);
   } catch (err) {

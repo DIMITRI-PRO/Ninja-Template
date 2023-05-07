@@ -3,6 +3,7 @@ import cors from "cors";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { existsSync } from "fs";
+import cookieParser from "cookie-parser";
 import router from "./router.js";
 import log from "./services/logger.js";
 
@@ -17,11 +18,13 @@ app.use(loggingMiddleware);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
-    optionsSuccessStatus: 200,
+    credentials: true,
   })
 );
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 // Serve the public folder for public resources
 app.use(express.static(join(__dirname, "../public")));

@@ -20,30 +20,22 @@ const hashPassword = async (req, res, next) => {
 };
 
 const verifyPassword = async (req, res) => {
-  const { user, body } = req;
-  const [{ id, password, pseudo, picture }] = user;
   try {
+    const { user, body } = req;
+    const [{ id, password, pseudo, email, firstname, lastname, picture }] =
+      user;
     const isVerified = await verify(password, body.password);
     if (isVerified) {
       const payload = { sub: id };
       const token = sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
       delete user.password;
-      res
-        .status(200)
-        .cookie(process.env.NAME_COOKIE, `Bearer ${token}`, {
-          expires: new Date(Date.now() + 10 * 3600000), // cookie will be removed after 2 hours
-        })
-        .json({
-          id,
-          picture,
-          pseudo,
-        });
+      res.cookie(process.env.NAME_COOKIE, token);
+      res.status(200).json({ pseudo, email, firstname, lastname, picture });
     } else {
       res.sendStatus(401);
     }
   } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+    res.status(500);
   }
 };
 
