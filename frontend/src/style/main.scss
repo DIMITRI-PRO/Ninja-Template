@@ -3,3 +3,11 @@
 
 // Importer les styles de chaque composant
 @import "components/container";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}

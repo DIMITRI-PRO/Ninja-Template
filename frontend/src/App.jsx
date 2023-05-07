@@ -1,8 +1,10 @@
+import { Home } from "./pages/Home";
+import { AuthContextProvider } from "./context/AuthContext";
+
 export const App = () => {
   return (
-    <div className="container">
-      <h1>Hello world!</h1>
-      <button type="button">test</button>
-    </div>
+    <AuthContextProvider>
+      <Home />
+    </AuthContextProvider>
   );
 };

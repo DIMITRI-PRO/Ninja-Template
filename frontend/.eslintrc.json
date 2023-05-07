@@ -19,6 +19,8 @@
   "plugins": ["react", "import", "jest"],
   "rules": {
     "no-console": "off",
+    "react/button-has-type": "off",
+    "react/jsx-no-constructed-context-values": "off",
     "import/prefer-default-export": "off",
     "react/function-component-definition": [
       "error",
@@ -43,18 +45,5 @@
         "assert": "either"
       }
     ]
-  },
-  "settings": {
-    "import/resolver": {
-      "eslint-import-resolver-custom-alias": {
-        "alias": {
-          "@assets": "./src/assets",
-          "@components": "./src/components",
-          "@pages": "./src/pages",
-          "@services": "./src/services"
-        },
-        "extensions": [".js", ".jsx"]
-      }
-    }
   }
 }
