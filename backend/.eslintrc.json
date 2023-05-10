@@ -9,9 +9,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "jest"
-  ],
+  "plugins": ["jest"],
   "rules": {
     "import/extensions": "off",
     "no-underscore-dangle": "off",
