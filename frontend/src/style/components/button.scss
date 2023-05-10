@@ -1,0 +1,20 @@
+.btn-basic {
+  background-color: $btn-basic;
+  border: 2px solid $btn-basic-border;
+  border-radius: 0.4em;
+  padding: 0.5em 1em;
+  color: $text-btn-basic;
+
+  &:hover {
+    transition: ease-in-out 0.5s;
+    background: $btn-basic-hover;
+    cursor: pointer;
+    color: $text-btn-basic-hover;
+  }
+
+  &:active {
+    color: $text-btn-basic-hover;
+    border: 2px solid $btn-basic-border-hover;
+    transition: none;
+  }
+}

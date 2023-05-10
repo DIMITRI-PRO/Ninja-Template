@@ -13,6 +13,13 @@ class AbstractManager {
     return this.connection.query(`select * from ${this.table}`);
   }
 
+  findBy(property, value) {
+    return this.connection.query(
+      `select ${property} from ${this.table} where ${property} = ?`,
+      [value]
+    );
+  }
+
   delete(id) {
     return this.connection.query(`delete from ${this.table} where id = ?`, [
       id,

@@ -1,15 +1,10 @@
-import Home from "./pages/Home";
+import { AuthRouter } from "./router/Router";
+import { AuthContextProvider } from "./context/AuthContext";
 
-import "./App.css";
-
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <Home />
-      <p>coucou</p>
-      <p>comment vas tu?</p>
-    </div>
+    <AuthContextProvider>
+      <AuthRouter />
+    </AuthContextProvider>
   );
-}
-
-export default App;
+};

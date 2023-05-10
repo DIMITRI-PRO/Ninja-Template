@@ -1,0 +1,16 @@
+// Importer les variables de thème
+@import "themes/basicTheme";
+
+// Importer les styles de chaque composant
+@import "components/container";
+@import "components/basic-menu";
+@import "components/button";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: sans-serif;
+}

@@ -16,8 +16,8 @@ router.use(json());
 router.post("/register", validateUser, hashPassword, postUser);
 router.post("/login", login, verifyPassword);
 
-userControllers(router);
-
 router.use(verifyToken);
+
+userControllers(router);
 
 export default router;

@@ -19,10 +19,17 @@ class Users extends AbstractManager {
     );
   }
 
-  readForLogin(users) {
+  findUser(id) {
+    return this.connection.query(
+      `select lastname, firstname, email, pseudo, picture from ${this.table} where id = ?;`,
+      [id]
+    );
+  }
+
+  readForLogin({ email }) {
     return this.connection.query(
       `select * from ${this.table} where email = ?;`,
-      [users.email]
+      [email]
     );
   }
 
