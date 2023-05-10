@@ -2,7 +2,11 @@ import PropTypes from "prop-types";
 
 export const Button = ({ type, onClick, children }) => {
   return (
-    <button type={type || "button"} onClick={onClick || null}>
+    <button
+      className={`ninja btn-${type || "basic"}`}
+      type={type || "button"}
+      onClick={onClick || null}
+    >
       {children}
     </button>
   );
