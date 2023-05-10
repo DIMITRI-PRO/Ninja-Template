@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { PropTypes } from "prop-types";
 import axios from "axios";
-import jwt from "jwt-decode";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const COOKIE = import.meta.env.VITE_NAME_COOKIE;
-const JWT_SECRET = import.meta.env.VITE_JWT_SECRET;
 
 export const AuthContext = createContext({});
 
@@ -84,29 +88,26 @@ export const AuthContextProvider = ({ children }) => {
     return result;
   };
 
-  const decodeCookie = async (toDecodeCookie, secret) => {
-    try {
-      const decoded = jwt(toDecodeCookie, secret);
-      const { data } = await requestAPI(`users/${decoded.sub}`);
-      setUser(data);
-      setIsLogin(true);
-    } catch (err) {
-      setIsLogin(false);
-    }
-  };
+  const userData = useMemo(() => {
+    return { user };
+  }, [user]);
 
   useEffect(() => {
     setCookie(getCookie(COOKIE));
-  }, [requestAPI]);
-
-  useEffect(() => {
-    if (cookie) decodeCookie(cookie, JWT_SECRET);
-    else setIsLogin(false);
-  }, [cookie]);
+  }, [isLogin]);
 
   return (
     <AuthContext.Provider
-      value={{ requestAPI, cookie, deleteCookie, user, isLogin, setIsLogin }}
+      value={{
+        requestAPI,
+        cookie,
+        deleteCookie,
+        user,
+        setUser,
+        isLogin,
+        setIsLogin,
+        userData,
+      }}
     >
       {children}
     </AuthContext.Provider>
