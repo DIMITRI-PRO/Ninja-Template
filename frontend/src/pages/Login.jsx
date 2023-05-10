@@ -1,14 +1,17 @@
-import { useAuthContext } from "../../context/AuthContext";
-import { Form, FormItem, Button } from "../../components/NinjaComp";
+import { useAuthContext } from "../context/AuthContext";
+import { Form, FormItem, Button } from "../components/NinjaComp";
 
 export const Login = () => {
-  const { requestAPI, setIsLogin } = useAuthContext();
+  const { requestAPI, setIsLogin, setUser } = useAuthContext();
 
   const onSubmit = async (datas) => {
     try {
       const body = datas;
       const { data } = await requestAPI("post", "login", body);
-      if (data) setIsLogin(true);
+      if (data) {
+        setIsLogin(true);
+        setUser(data);
+      }
     } catch (e) {
       console.error(e);
     }

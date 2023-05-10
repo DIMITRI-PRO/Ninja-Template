@@ -1,5 +1,5 @@
-import { useAuthContext } from "../../context/AuthContext";
-import { Form, FormItem, Button } from "../../components/NinjaComp";
+import { useAuthContext } from "../context/AuthContext";
+import { Form, FormItem, Button } from "../components/NinjaComp";
 
 export const Register = () => {
   const { requestAPI } = useAuthContext();
