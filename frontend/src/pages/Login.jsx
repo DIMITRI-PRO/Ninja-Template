@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { Form, FormItem, Button } from "../components/NinjaComp";
 
 export const Login = () => {
   const { requestAPI, setIsLogin, setUser } = useAuthContext();
+  const navigate = useNavigate();
 
   const onSubmit = async (datas) => {
     try {
@@ -11,6 +13,7 @@ export const Login = () => {
       if (data) {
         setIsLogin(true);
         setUser(data);
+        navigate("/");
       }
     } catch (e) {
       console.error(e);
