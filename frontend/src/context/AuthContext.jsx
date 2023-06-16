@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import axios from "axios";
 
@@ -14,15 +15,10 @@ const COOKIE = import.meta.env.VITE_NAME_COOKIE;
 export const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(false);
   const [cookie, setCookie] = useState();
-  const [user, setUser] = useState({
-    lastname: null,
-    firstname: null,
-    email: null,
-    pseudo: null,
-    picture: null,
-  });
+  const [user, setUser] = useState(null);
 
   const getCookie = (name) => {
     const cookieValue = document.cookie.match(
@@ -33,13 +29,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const deleteCookie = () => {
     document.cookie = `${COOKIE}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
-    setUser({
-      lastname: null,
-      firstname: null,
-      email: null,
-      pseudo: null,
-      picture: null,
-    });
+    setUser(null);
     setIsLogin(false);
   };
 
@@ -88,13 +78,15 @@ export const AuthContextProvider = ({ children }) => {
     return result;
   };
 
-  const userData = useMemo(() => {
-    return { user };
-  }, [user]);
+  const authMemo = useMemo(() => {
+    return { user, isLogin };
+  }, [user, isLogin]);
 
   useEffect(() => {
     setCookie(getCookie(COOKIE));
-  }, [isLogin]);
+    if (cookie) setIsLogin(true);
+    else setIsLogin(false);
+  }, [location, cookie]);
 
   return (
     <AuthContext.Provider
@@ -102,11 +94,9 @@ export const AuthContextProvider = ({ children }) => {
         requestAPI,
         cookie,
         deleteCookie,
-        user,
         setUser,
-        isLogin,
         setIsLogin,
-        userData,
+        authMemo,
       }}
     >
       {children}
