@@ -1,12 +1,21 @@
 .nav-header-basic {
+  position: fixed;
+  min-width: 300px;
   -webkit-box-shadow: 0px 9px 18px 0px rgba(0, 0, 0, 0.39);
   box-shadow: 0px 9px 18px 0px rgba(0, 0, 0, 0.39);
-  background-color: $primary;
+  background-color: $secondary;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .nav-basic {
+  border: 1px solid red;
   display: flex;
   align-items: center;
+  @include mobile {
+      justify-content: space-between;
+  }
 }
 
 .nav-home-link {
@@ -18,7 +27,13 @@
 }
 
 .nav-ul {
+  display: flex;
   list-style: none;
+  
+  @include mobile {
+    display: none;
+  }
+
   & li {
     text-align: center;
     & > .nav-link {
@@ -52,4 +67,35 @@
       color: inherit;
     }
   }
+}
+
+.nav-children {
+  display: flex;
+  @include mobile {
+    display: none;
+  }
+}
+
+// mobile menu
+.nav-basic-mobile {
+  display: none;
+  @include mobile {
+    display: flex;
+
+  }
+  & ul {
+    list-style: none;
+  }
+}
+
+.nav-ul-mobile {
+  position: absolute;
+  right: 1rem;
+  background: $primary;
+  padding: 1rem 0.8rem;
+}
+
+.nav-header-mobile {
+  display: flex;
+  align-items: center;
 }

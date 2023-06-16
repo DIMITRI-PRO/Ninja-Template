@@ -18,3 +18,30 @@
     transition: none;
   }
 }
+
+.btn-menu {
+  background: $secondary;
+  padding: 0.5em 1em;
+  color: $text-btn-basic;
+  height: -moz-fit-content;
+  height: fit-content;
+  border: none;
+  
+  & img {
+    width: 1.5em;
+    height: 1.5em;
+    
+  }
+
+  &:hover {
+    transition: ease-in-out 0.5s;
+    background: $secondary;
+    cursor: pointer;
+    color: $text-btn-basic-hover;
+  }
+
+  &:active {
+    color: $text-btn-basic-hover;
+    transition: none;
+  }
+}
