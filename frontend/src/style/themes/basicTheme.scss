@@ -1,8 +1,10 @@
 // Variables
 $primary: #cfd6dc;
-$secondary: #7b8c9a;
+$secondary: #dbe0e3;
+$tertiary: #52616e;
 $primary-border: #ebf5fd;
 $secondary-border: #63696e;
+$tertiary-border: #63696e;
 
 //buttons
 $btn-basic: #cfd6dc;
@@ -17,3 +19,8 @@ $text-btn-basic-hover: #c9d3da;
 //icon-color
 $icon-home: #171718;
 $icon-home-hover: #8a8a8f;
+
+//responsive
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;

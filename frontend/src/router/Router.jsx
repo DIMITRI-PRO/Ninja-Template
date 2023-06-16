@@ -1,6 +1,6 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { BasicMenu, Button } from "../components/NinjaComp";
 import { publicRoutes } from "../constant/publicRoutes";
@@ -20,43 +20,37 @@ const AllRoutes = ({ routes }) => {
 };
 
 AllRoutes.propTypes = {
-  routes: PropTypes.shape([]).isRequired,
+  routes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export const AuthRouter = () => {
-  const { isLogin, deleteCookie } = useAuthContext();
+  const navigate = useNavigate();
+  const { deleteCookie, authMemo } = useAuthContext();
+  const { isLogin } = authMemo;
   const [allRoutes, setAllRoutes] = useState(publicRoutes);
 
   useEffect(() => {
-    if (isLogin) {
-      setAllRoutes([...publicRoutes, ...privateRoutes]);
-    } else {
-      setAllRoutes(publicRoutes);
-    }
+    if (isLogin) setAllRoutes([...publicRoutes, ...privateRoutes]);
+    else setAllRoutes(publicRoutes);
   }, [isLogin]);
 
+  const logOut = () => {
+    deleteCookie();
+    navigate("/login");
+  };
+
   return (
-    <BrowserRouter>
-      <BasicMenu headers={publicRoutes}>
-        <Button onClick={() => deleteCookie()}>Déconnexion</Button>
-      </BasicMenu>
-      <Suspense fallback={<div>Loading...</div>}>
+    <>
+      <BasicMenu
+        headers={publicRoutes}
+        typeMenu="only-mobile"
+        extraMenuButton={
+          isLogin ? <Button onClick={logOut}>Déconnexion</Button> : null
+        }
+      />
+      <div style={{ paddingTop: 75 }}>
         <AllRoutes routes={allRoutes} />
-      </Suspense>
-    </BrowserRouter>
+      </div>
+    </>
   );
-};
-
-const PrivateRoute = ({ exact, path, element: Component }) => {
-  return <Route exact={exact} path={path} element={<Component />} />;
-};
-
-PrivateRoute.propTypes = {
-  exact: PropTypes.bool,
-  path: PropTypes.string.isRequired,
-  element: PropTypes.element,
-};
-PrivateRoute.defaultProps = {
-  exact: true,
-  element: null,
 };

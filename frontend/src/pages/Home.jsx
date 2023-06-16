@@ -1,3 +1,3 @@
 export const Home = () => {
-  return <div>home</div>;
+  return <div style={{ marginTop: 75 }}>home</div>;
 };

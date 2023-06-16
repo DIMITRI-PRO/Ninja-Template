@@ -17,7 +17,7 @@ const Form = ({ children, onSubmit }) => {
 
 Form.propTypes = {
   onSubmit: PropTypes.func,
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
 };
 Form.defaultProps = {
   onSubmit: () => {},
@@ -41,7 +41,7 @@ FormItem.propTypes = {
   label: PropTypes.string,
   type: PropTypes.string,
   dataName: PropTypes.string.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
 };
 FormItem.defaultProps = {
   type: "text",
