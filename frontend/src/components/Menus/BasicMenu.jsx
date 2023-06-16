@@ -1,8 +1,10 @@
-import { useState } from "react";
 /* eslint-disable prefer-destructuring */
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "../Buttons/Button";
+import { LanguageSwitch } from "../Buttons/LanguageSwitch";
 import { MoreVertical, X, Home } from "../../assets/FeatherIcons";
 
 export const BasicMenu = ({
@@ -20,6 +22,7 @@ export const BasicMenu = ({
   extraMenuButton,
   gap,
 }) => {
+  const { t } = useTranslation();
   const [displayMobileMenu, setDisplayMobileMenu] = useState(false);
 
   const ulStyle = {
@@ -154,7 +157,7 @@ export const BasicMenu = ({
           {displayMobileMenu && (
             <ul id="menu-item-list" className="ninja nav-ul-mobile">
               <li className="ninja nav-header-mobile">
-                <h2>menu</h2>
+                <h2>{t("menu.title")}</h2>
                 <Button
                   name="menu"
                   icon={X}
@@ -180,6 +183,7 @@ export const BasicMenu = ({
               })}
               <hr />
               {extraMenuButton && extraMenuButton}
+              <LanguageSwitch />
             </ul>
           )}
         </div>
