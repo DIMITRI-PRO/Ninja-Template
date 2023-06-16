@@ -1,0 +1,25 @@
+{
+  "menu": {
+    "title": "menu"
+  },
+  "login": {
+    "label": {
+      "email": "Email :",
+      "password": "Mot de passe :"
+    }
+  },
+  "register": {
+    "label": {
+      "email": "Email :",
+      "password": "Mot de passe :",
+      "lastname": "Nom :",
+      "firstname": "Prénom :",
+      "pseudo": "Pseudo :"
+    }
+  },
+  "buttons": {
+    "login-submit": "Se connecter",
+    "register-submit": "S'enregistrer",
+    "deconnexion": "Déconnexion"
+  }
+}

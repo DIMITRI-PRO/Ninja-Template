@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
-import { Form, FormItem, Button } from "../components/NinjaComp";
+import { useTranslation } from "react-i18next";
+import { useAuthContext } from "../../context/AuthContext";
+import { Form, FormItem, Button } from "../../components/NinjaComp";
 
 export const Login = () => {
+  const { t } = useTranslation();
   const { requestAPI, setIsLogin, setUser } = useAuthContext();
   const navigate = useNavigate();
 
@@ -22,9 +24,13 @@ export const Login = () => {
 
   return (
     <Form onSubmit={onSubmit}>
-      <FormItem label="Email :" type="email" dataName="email" />
-      <FormItem label="Password :" type="password" dataName="password" />
-      <Button type="submit">Login</Button>
+      <FormItem label={t("login.label.email")} type="email" dataName="email" />
+      <FormItem
+        label={t("login.label.password")}
+        type="password"
+        dataName="password"
+      />
+      <Button type="submit">{t("buttons.login-submit")}</Button>
     </Form>
   );
 };

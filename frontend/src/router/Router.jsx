@@ -1,29 +1,16 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Route, useNavigate } from "react-router-dom";
+import { AllRoutes } from "./AllRoutes";
 import { useAuthContext } from "../context/AuthContext";
-import { BasicMenu, Button } from "../components/NinjaComp";
+import { BasicMenu, Button, BasicMenuLayer } from "../components/NinjaComp";
 import { publicRoutes } from "../constant/publicRoutes";
 import { privateRoutes } from "../constant/privateRoutes";
 
-const AllRoutes = ({ routes }) => {
-  const result = routes.map(({ exact, path, element }, index) => (
-    <Route
-      key={`${index + path}`}
-      exact={exact}
-      path={path}
-      element={element}
-    />
-  ));
-
-  return <Routes>{result}</Routes>;
-};
-
-AllRoutes.propTypes = {
-  routes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-};
+const TestRoute31 = () => <div style={{ paddingTop: 100 }}>test okokok</div>;
 
 export const AuthRouter = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { deleteCookie, authMemo } = useAuthContext();
   const { isLogin } = authMemo;
@@ -45,12 +32,16 @@ export const AuthRouter = () => {
         headers={publicRoutes}
         typeMenu="only-mobile"
         extraMenuButton={
-          isLogin ? <Button onClick={logOut}>Déconnexion</Button> : null
+          isLogin ? (
+            <Button onClick={logOut}>{t("buttons.deconnexion")}</Button>
+          ) : null
         }
       />
-      <div style={{ paddingTop: 75 }}>
-        <AllRoutes routes={allRoutes} />
-      </div>
+      <BasicMenuLayer>
+        <AllRoutes routes={allRoutes}>
+          <Route exact path="test-route" element={TestRoute31()} />
+        </AllRoutes>
+      </BasicMenuLayer>
     </>
   );
 };
