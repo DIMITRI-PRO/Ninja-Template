@@ -27,9 +27,13 @@ const verifyPassword = async (req, res) => {
     const isVerified = await verify(password, body.password);
     if (isVerified) {
       const payload = { sub: id };
-      const token = sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+      const token = sign(payload, process.env.JWT_SECRET, {
+        expiresIn: `${process.env.EXPIRE_TIME}s`,
+      });
       delete user.password;
-      res.cookie(process.env.NAME_COOKIE, token);
+      res.cookie(process.env.NAME_COOKIE, token, {
+        maxAge: process.env.EXPIRE_TIME * 1000,
+      });
       res.status(200).json({ pseudo, email, firstname, lastname, picture });
     } else {
       res.sendStatus(401);
