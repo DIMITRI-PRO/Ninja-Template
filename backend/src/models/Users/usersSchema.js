@@ -13,11 +13,11 @@ const validateUser = async (req, res, next) => {
   const { body } = req;
   try {
     const { error } = userSchema.validate(body, { abortEarly: false });
-
-    if (error) res.json({ validationErrors: error.details }).sendStatus(422);
+    if (error.details)
+      res.status(422).json({ validationErrors: error.details });
     else next();
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] : error validate user...");
   }
 };
 
