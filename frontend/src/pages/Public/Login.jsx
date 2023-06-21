@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMessageContext } from "../../context/MessageNotifContext";
 import { useAuthContext } from "../../context/AuthContext";
 import { Form, FormItem, Button } from "../../components/NinjaComp";
 
 export const Login = () => {
   const { t } = useTranslation();
   const { requestAPI, setIsLogin, setUser } = useAuthContext();
+  const { responseMessage } = useMessageContext();
   const navigate = useNavigate();
 
   const onSubmit = async (datas) => {
@@ -18,7 +20,7 @@ export const Login = () => {
         navigate("/");
       }
     } catch (e) {
-      console.error(e);
+      responseMessage(e);
     }
   };
 

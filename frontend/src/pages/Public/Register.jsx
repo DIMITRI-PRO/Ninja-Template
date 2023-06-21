@@ -1,24 +1,27 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useMessageContext } from "../../context/MessageNotifContext";
 import { useAuthContext } from "../../context/AuthContext";
 import { Form, FormItem, Button } from "../../components/NinjaComp";
 
 export const Register = () => {
   const { t } = useTranslation();
+  const { responseMessage, errors } = useMessageContext();
+  const navigate = useNavigate();
   const { requestAPI } = useAuthContext();
 
   const onSubmit = async (datas) => {
     try {
       const body = datas;
       await requestAPI("post", "register", body);
-
-      document.location.href = "login";
-    } catch (e) {
-      console.error(e);
+      navigate("/login");
+    } catch (error) {
+      responseMessage(error);
     }
   };
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} errors={errors}>
       <FormItem
         label={t("register.label.lastname")}
         type="text"

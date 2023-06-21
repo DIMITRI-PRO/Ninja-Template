@@ -3,4 +3,6 @@ import { Login } from "./Public/Login";
 import { NotFound } from "./Public/NotFound";
 import { Register } from "./Public/Register";
 
-export { Home, Login, NotFound, Register };
+import { Profile } from "./Private/Profile";
+
+export { Home, Login, NotFound, Register, Profile };
