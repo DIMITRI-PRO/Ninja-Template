@@ -5,6 +5,8 @@ const { Users } = models;
 const getUsers = async (req, res) => {
   try {
     const [rows] = await Users.findAll();
+    // eslint-disable-next-line no-param-reassign
+    rows.forEach((user) => delete user.password);
     res.send(rows);
   } catch (err) {
     res.status(500);
@@ -29,17 +31,17 @@ const login = async (req, res, next) => {
       req.user = users;
       next();
     } else {
-      res.status(401).send("This mail doesn't exist in our database");
+      res.status(401).send("the informations are incorrect");
     }
   } catch (err) {
-    res.status(500).send("Error retrieving data from database");
+    res.status(500);
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async ({ body, params }, res) => {
   try {
-    const user = req.body;
-    user.id = parseInt(req.params.id, 10);
+    const user = body;
+    user.id = parseInt(params.id, 10);
     const [result] = await Users.update(user);
 
     if (result.affectedRows === 0) res.sendStatus(404);
@@ -55,10 +57,10 @@ const postUser = async ({ body }, res) => {
     const [isEmail] = await Users.findBy("email", email);
 
     if (isEmail[0])
-      res.json({ message: "Item already taken", email }).status(409);
+      res.status(409).json({ message: "Item already taken", email });
 
     await Users.insert(body);
-    res.json({ message: "Item successfully created" }).status(201);
+    res.status(201).json({ message: "Item successfully created" });
   } catch (err) {
     res.status(500);
   }
