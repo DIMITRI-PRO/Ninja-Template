@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "../Buttons/Button";
 import { LanguageSwitch } from "../Buttons/LanguageSwitch";
-import { MoreVertical, X, Home } from "../../assets/FeatherIcons";
+import { MoreVertical, X, Home, User } from "../../assets/FeatherIcons";
 
 export const BasicMenu = ({
   icon,
@@ -20,6 +20,8 @@ export const BasicMenu = ({
   bodyAlign,
   alignement,
   extraMenuButton,
+  userData,
+  homeExtra,
   gap,
 }) => {
   const { t } = useTranslation();
@@ -30,7 +32,7 @@ export const BasicMenu = ({
     gap,
   };
   const navStyle = { width: "100%" };
-  const linkStyle = { paddingLeft: "1rem" };
+  const linkStyle = { paddingLeft: "1rem", display: "flex" };
   const bodyStyle = {
     paddingRight: "20px",
   };
@@ -120,6 +122,7 @@ export const BasicMenu = ({
           >
             <Button name="menu" icon={icon || Home} />
           </Link>
+          {homeExtra}
         </div>
 
         <ul id="nav-ul" className="ninja nav-ul" style={ulStyle}>
@@ -130,7 +133,7 @@ export const BasicMenu = ({
                   <li key={key || name} className="ninja nav-li">
                     {render || (
                       <Link className="ninja nav-link" to={`${path}`}>
-                        {name}
+                        {t(`menu.navigation.${name}`)}
                       </Link>
                     )}
                   </li>
@@ -157,6 +160,19 @@ export const BasicMenu = ({
           {displayMobileMenu && (
             <ul id="menu-item-list" className="ninja nav-ul-mobile">
               <li className="ninja nav-header-mobile">
+                {userData && (
+                  <img
+                    src={userData?.picture || User}
+                    style={{
+                      border: "solid 1px black",
+                      borderRadius: "50%",
+                      padding: "0.2rem",
+                    }}
+                    height={80}
+                    width={80}
+                    alt="profile"
+                  />
+                )}
                 <h2>{t("menu.title")}</h2>
                 <Button
                   name="menu"
@@ -173,7 +189,7 @@ export const BasicMenu = ({
                     <li key={key || name} className="ninja nav-li-mobile">
                       {render || (
                         <Link className="ninja nav-link-mobile" to={`${path}`}>
-                          {name}
+                          {t(`menu.navigation.${name}`)}
                         </Link>
                       )}
                     </li>
@@ -206,7 +222,12 @@ BasicMenu.propTypes = {
   bodyAlign: PropTypes.string,
   alignement: PropTypes.arrayOf(PropTypes.number),
   gap: PropTypes.number,
+  homeExtra: PropTypes.element,
+  userData: PropTypes.shape({
+    picture: PropTypes.string,
+  }),
 };
+
 BasicMenu.defaultProps = {
   icon: null,
   typeMenu: null,
@@ -220,4 +241,6 @@ BasicMenu.defaultProps = {
   bodyAlign: "right",
   alignement: [0, 5, 0],
   gap: 15,
+  homeExtra: null,
+  userData: null,
 };
