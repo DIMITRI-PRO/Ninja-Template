@@ -1,10 +1,16 @@
 /* eslint-disable prefer-destructuring */
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Button } from "../Buttons/Button";
+import { LanguageSwitch } from "../Buttons/LanguageSwitch";
+import { MoreVertical, X, Home, User } from "../../assets/FeatherIcons";
 
 export const BasicMenu = ({
   icon,
   logoSize,
+  typeMenu,
   headers,
   children,
   direction,
@@ -13,17 +19,21 @@ export const BasicMenu = ({
   justify,
   bodyAlign,
   alignement,
+  extraMenuButton,
+  userData,
+  homeExtra,
   gap,
 }) => {
+  const { t } = useTranslation();
+  const [displayMobileMenu, setDisplayMobileMenu] = useState(false);
+
   const ulStyle = {
-    display: "flex",
     justifyContent: justify,
     gap,
   };
   const navStyle = { width: "100%" };
-  const linkStyle = { paddingLeft: "1rem" };
+  const linkStyle = { paddingLeft: "1rem", display: "flex" };
   const bodyStyle = {
-    display: "flex",
     paddingRight: "20px",
   };
 
@@ -84,6 +94,20 @@ export const BasicMenu = ({
 
   if (alignement) calculatePercentages(alignement);
 
+  document.addEventListener("click", (event) => {
+    const div = document.getElementById("menu-item-list");
+    const btnList = document.getElementById("menu-item-list-btn");
+    const iconList = document.getElementById("menu-item-list-btn-icon");
+
+    if (
+      displayMobileMenu &&
+      !div?.contains(event.target) &&
+      !btnList?.contains(event.target) &&
+      !iconList?.contains(event.target)
+    )
+      setDisplayMobileMenu(false);
+  });
+
   return (
     <header
       className="ninja nav-header-basic"
@@ -96,36 +120,88 @@ export const BasicMenu = ({
             className="ninja nav-home-link"
             style={{ width: logoSize }}
           >
-            {icon || (
-              <svg width="35" height="35" viewBox="0 0 24 24">
-                <path
-                  d="M19.07,4.93C17.22,3 14.66,1.96 12,2C9.34,1.96 6.79,3 4.94,4.93C3,6.78 1.96,9.34 2,12C1.96,14.66 3,17.21 4.93,19.06C6.78,21 9.34,22.04 12,22C14.66,22.04 17.21,21 19.06,19.07C21,17.22 22.04,14.66 22,12C22.04,9.34 21,6.78 19.07,4.93M17,12V18H13.5V13H10.5V18H7V12H5L12,5L19.5,12H17Z"
-                  fill="currentColor"
-                />
-              </svg>
-            )}
+            <Button name="menu" icon={icon || Home} />
           </Link>
+          {homeExtra}
         </div>
 
-        <ul className="ninja nav-ul" style={ulStyle}>
-          {headers.map(({ key, path, render, name, ignore }) => {
-            if (!ignore) {
-              return (
-                <li key={key || name} className="ninja nav-li">
-                  {render || (
-                    <Link className="ninja nav-link" to={`${path}`}>
-                      {name}
-                    </Link>
-                  )}
-                </li>
-              );
-            }
-            return null;
-          })}
+        <ul id="nav-ul" className="ninja nav-ul" style={ulStyle}>
+          {typeMenu !== "only-mobile" &&
+            headers.map(({ key, path, render, name, ignore }) => {
+              if (!ignore) {
+                return (
+                  <li key={key || name} className="ninja nav-li">
+                    {render || (
+                      <Link className="ninja nav-link" to={`${path}`}>
+                        {t(`menu.navigation.${name}`)}
+                      </Link>
+                    )}
+                  </li>
+                );
+              }
+              return null;
+            })}
         </ul>
 
         <div className="ninja nav-children" style={bodyStyle}>
           {children}
+        </div>
+
+        {/* Mobile */}
+        <div className={`ninja nav-${typeMenu || "basic-mobile"}`}>
+          <Button
+            id="menu-item-list-btn"
+            name="menu"
+            onClick={() => {
+              setDisplayMobileMenu(!displayMobileMenu);
+            }}
+            icon={MoreVertical}
+          />
+          {displayMobileMenu && (
+            <ul id="menu-item-list" className="ninja nav-ul-mobile">
+              <li className="ninja nav-header-mobile">
+                {userData && (
+                  <img
+                    src={userData?.picture || User}
+                    style={{
+                      border: "solid 1px black",
+                      borderRadius: "50%",
+                      padding: "0.2rem",
+                    }}
+                    height={80}
+                    width={80}
+                    alt="profile"
+                  />
+                )}
+                <h2>{t("menu.title")}</h2>
+                <Button
+                  name="menu"
+                  icon={X}
+                  onClick={() => {
+                    setDisplayMobileMenu(false);
+                  }}
+                />
+              </li>
+              <hr />
+              {headers.map(({ key, path, render, name, ignore }) => {
+                if (!ignore) {
+                  return (
+                    <li key={key || name} className="ninja nav-li-mobile">
+                      {render || (
+                        <Link className="ninja nav-link-mobile" to={`${path}`}>
+                          {t(`menu.navigation.${name}`)}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                }
+                return null;
+              })}
+              <hr />
+              {extraMenuButton && extraMenuButton}
+              <LanguageSwitch />
+            </ul>
+          )}
         </div>
       </nav>
     </header>
@@ -135,20 +211,29 @@ export const BasicMenu = ({
 BasicMenu.propTypes = {
   icon: PropTypes.element,
   logoSize: PropTypes.string,
-  headers: PropTypes.shape([]).isRequired,
+  typeMenu: PropTypes.string,
+  headers: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   children: PropTypes.element,
+  extraMenuButton: PropTypes.element,
   direction: PropTypes.string,
   reverse: PropTypes.bool,
   wrap: PropTypes.bool,
   justify: PropTypes.string,
   bodyAlign: PropTypes.string,
-  alignement: PropTypes.shape([]),
+  alignement: PropTypes.arrayOf(PropTypes.number),
   gap: PropTypes.number,
+  homeExtra: PropTypes.element,
+  userData: PropTypes.shape({
+    picture: PropTypes.string,
+  }),
 };
+
 BasicMenu.defaultProps = {
   icon: null,
+  typeMenu: null,
   logoSize: "auto",
   children: null,
+  extraMenuButton: null,
   direction: "horizontal",
   reverse: false,
   wrap: true,
@@ -156,4 +241,6 @@ BasicMenu.defaultProps = {
   bodyAlign: "right",
   alignement: [0, 5, 0],
   gap: 15,
+  homeExtra: null,
+  userData: null,
 };

@@ -5,8 +5,11 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { PropTypes } from "prop-types";
+import jwtDecode from "jwt-decode";
 import axios from "axios";
+import { useMessageContext } from "./MessageNotifContext";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const COOKIE = import.meta.env.VITE_NAME_COOKIE;
@@ -14,15 +17,14 @@ const COOKIE = import.meta.env.VITE_NAME_COOKIE;
 export const AuthContext = createContext({});
 
 export const AuthContextProvider = ({ children }) => {
+  const { responseMessage } = useMessageContext();
+
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(false);
   const [cookie, setCookie] = useState();
-  const [user, setUser] = useState({
-    lastname: null,
-    firstname: null,
-    email: null,
-    pseudo: null,
-    picture: null,
-  });
+  const [user, setUser] = useState(null);
+  const [refreshUser, setRefreshUser] = useState(false);
+  const [id, setId] = useState(null);
 
   const getCookie = (name) => {
     const cookieValue = document.cookie.match(
@@ -33,19 +35,14 @@ export const AuthContextProvider = ({ children }) => {
 
   const deleteCookie = () => {
     document.cookie = `${COOKIE}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
-    setUser({
-      lastname: null,
-      firstname: null,
-      email: null,
-      pseudo: null,
-      picture: null,
-    });
+    setUser(null);
     setIsLogin(false);
   };
 
   const requestAPI = async (methodType, resource, body) => {
     let result = [];
 
+    // eslint-disable-next-line no-useless-catch
     try {
       let method = methodType;
       let resourceName = resource;
@@ -55,7 +52,7 @@ export const AuthContextProvider = ({ children }) => {
           method = "delete";
           break;
         case methodType === "patch":
-          method = "patch";
+          method = "put";
           break;
         case methodType === "post":
           method = "post";
@@ -82,19 +79,38 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       result = data;
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      throw error;
     }
     return result;
   };
 
-  const userData = useMemo(() => {
-    return { user };
-  }, [user]);
+  const getUser = async (idSub) => {
+    try {
+      const { data } = await requestAPI("get", `users/${idSub}`);
+      setUser(data);
+    } catch (e) {
+      responseMessage(e);
+    }
+  };
+
+  const authMemo = useMemo(() => {
+    return { user, isLogin, id };
+  }, [user, isLogin, id]);
+
+  useEffect(() => {
+    if (cookie && isLogin && !user && !id) {
+      const { sub } = jwtDecode(cookie);
+      getUser(sub);
+      setId(sub);
+    }
+  }, [user, cookie, isLogin, refreshUser]);
 
   useEffect(() => {
     setCookie(getCookie(COOKIE));
-  }, [isLogin]);
+    if (cookie) setIsLogin(true);
+    else setIsLogin(false);
+  }, [location, cookie]);
 
   return (
     <AuthContext.Provider
@@ -102,11 +118,11 @@ export const AuthContextProvider = ({ children }) => {
         requestAPI,
         cookie,
         deleteCookie,
-        user,
         setUser,
-        isLogin,
         setIsLogin,
-        userData,
+        authMemo,
+        refreshUser,
+        setRefreshUser,
       }}
     >
       {children}

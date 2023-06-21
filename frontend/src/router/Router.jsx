@@ -1,62 +1,79 @@
-import { useState, useEffect, Suspense } from "react";
-import PropTypes from "prop-types";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, Link } from "react-router-dom";
+import { AllRoutes } from "./AllRoutes";
+import { useMessageContext } from "../context/MessageNotifContext";
 import { useAuthContext } from "../context/AuthContext";
-import { BasicMenu, Button } from "../components/NinjaComp";
+import {
+  BasicMenu,
+  Button,
+  BasicMenuLayer,
+  NotificationMessage,
+} from "../components/NinjaComp";
 import { publicRoutes } from "../constant/publicRoutes";
 import { privateRoutes } from "../constant/privateRoutes";
+import { User } from "../assets/FeatherIcons";
 
-const AllRoutes = ({ routes }) => {
-  const result = routes.map(({ exact, path, element }, index) => (
-    <Route
-      key={`${index + path}`}
-      exact={exact}
-      path={path}
-      element={element}
-    />
-  ));
+const UserHeader = () => {
+  const { authMemo } = useAuthContext();
+  const { user } = authMemo;
 
-  return <Routes>{result}</Routes>;
-};
+  const title = (
+    <Link to="/profile">
+      <img
+        className="menu profile-picture"
+        src={user?.picture || User}
+        alt={user?.pseudo}
+      />
+      {user?.pseudo}
+    </Link>
+  );
 
-AllRoutes.propTypes = {
-  routes: PropTypes.shape([]).isRequired,
+  if (user?.pseudo) return title;
+
+  return <div />;
 };
 
 export const AuthRouter = () => {
-  const { isLogin, deleteCookie } = useAuthContext();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { deleteCookie, authMemo } = useAuthContext();
+  const { displayMessage, setDisplayMessage, content, setErrors } =
+    useMessageContext();
+  const { isLogin, user } = authMemo;
   const [allRoutes, setAllRoutes] = useState(publicRoutes);
 
   useEffect(() => {
-    if (isLogin) {
-      setAllRoutes([...publicRoutes, ...privateRoutes]);
-    } else {
-      setAllRoutes(publicRoutes);
-    }
+    if (isLogin) setAllRoutes([...publicRoutes, ...privateRoutes]);
+    else setAllRoutes(publicRoutes);
   }, [isLogin]);
 
+  const logOut = () => {
+    deleteCookie();
+    navigate("/login");
+  };
+
+  const renderExtraButtons = (isLog) =>
+    isLog ? <Button onClick={logOut}>{t("buttons.deconnexion")}</Button> : null;
+
   return (
-    <BrowserRouter>
-      <BasicMenu headers={publicRoutes}>
-        <Button onClick={() => deleteCookie()}>Déconnexion</Button>
-      </BasicMenu>
-      <Suspense fallback={<div>Loading...</div>}>
+    <>
+      <BasicMenu
+        userData={user}
+        headers={allRoutes}
+        typeMenu="only-mobile"
+        extraMenuButton={renderExtraButtons(isLogin)}
+        homeExtra={<UserHeader />}
+      />
+      <NotificationMessage
+        display={displayMessage}
+        setDisplay={setDisplayMessage}
+        content={content}
+        setErrors={setErrors}
+      />
+      <BasicMenuLayer>
         <AllRoutes routes={allRoutes} />
-      </Suspense>
-    </BrowserRouter>
+      </BasicMenuLayer>
+    </>
   );
-};
-
-const PrivateRoute = ({ exact, path, element: Component }) => {
-  return <Route exact={exact} path={path} element={<Component />} />;
-};
-
-PrivateRoute.propTypes = {
-  exact: PropTypes.bool,
-  path: PropTypes.string.isRequired,
-  element: PropTypes.element,
-};
-PrivateRoute.defaultProps = {
-  exact: true,
-  element: null,
 };

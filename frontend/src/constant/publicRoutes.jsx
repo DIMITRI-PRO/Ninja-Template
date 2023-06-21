@@ -1,8 +1,4 @@
-import { Login } from "../pages/Login";
-import { Register } from "../pages/Register";
-import { Home } from "../pages/Home";
-
-const NotFound = () => <div>not found</div>;
+import { Home, Login, Register, NotFound } from "../pages/index";
 
 export const publicRoutes = [
   {
@@ -10,6 +6,7 @@ export const publicRoutes = [
     name: "home",
     element: <Home />,
     exact: true,
+    ignore: true,
   },
   {
     path: "/login",

@@ -1,4 +1,7 @@
 import AbstractManager from "../AbstractManager.js";
+import format from "../../utils/formatQuery.js";
+
+const { formatQuery } = format;
 
 class Users extends AbstractManager {
   constructor() {
@@ -34,17 +37,10 @@ class Users extends AbstractManager {
   }
 
   update(users) {
+    const { query, values } = formatQuery(users);
     return this.connection.query(
-      `update ${this.table} set firstname = ?, lastname = ? , email = ?, password = ?, pseudo = ?, picture = ? where id = ?`,
-      [
-        users.firstname,
-        users.lastname,
-        users.email,
-        users.hashedPassword,
-        users.pseudo,
-        users.picture,
-        users.id,
-      ]
+      `update ${this.table} set ${query} where id = ?`,
+      [...values, users.id]
     );
   }
 }
